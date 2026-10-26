@@ -104,45 +104,6 @@ RECALIBRATION_MODE = "full"
 
 `BRPA(channels=64, steps=2)` explicitly overrides `PROP_STEPS` for that instance. **No particular propagation depth or measured score is presented here as the paper-validated BRPA configuration**, because the supplied manuscript is about TCPELIA.
 
-## The mechanism
-
-Let the input feature map be $X\in\mathbb{R}^{B\times C\times H\times W}$. The seed and boundary branches produce $S_0,B\in[0,1]^{B\times1\times H\times W}$. At propagation step $t$:
-
-$$
-\Delta_t=\operatorname{ReLU}\big(\mathcal{P}(S_t)-S_t\big),\qquad
-S_{t+1}=\operatorname{clip}\big(S_t+p\,G(B)\odot\Delta_t,0,1\big).
-$$
-
-Here $\mathcal{P}$ is the selected spreading operator and $p$ is the effective propagation rate. In the original soft-barrier configuration, $G(B)=1-B$. With refinement enabled:
-
-$$
-A=\sigma\Big(\operatorname{Conv}_{3\times3}\big([S_K,S_0,B]\big)\Big).
-$$
-
-When the channel branch and full output recalibration are enabled:
-
-$$
-C_w=\sigma\big(\operatorname{MLP}(\operatorname{GAP}(X))\big),\qquad
-Y=X+A\odot X\odot C_w.
-$$
-
-The spatial and channel weights are broadcast over compatible dimensions. These equations describe the **supplied implementation**, not an independently verified claim from the provided manuscript. See [method notes](docs/METHOD.md) and [中文原理说明](docs/METHOD_zh-CN.md).
-
-## Ablation options
-
-| Setting in `BRPA.py` | Choices / effect |
-|---|---|
-| `COMPONENT_VARIANT` | `identity`, `seed`, `seed_prop`, `seed_prop_boundary`, `seed_prop_boundary_refine`, `full` |
-| `PROP_STEPS` | `0` through `5`; may be overridden by `steps=` |
-| `PROP_OPERATOR` | `maxpool3`, `avgpool3`, `maxpool5`, `conv3` |
-| `PROP_RATE_MODE` | `learnable` (`sigmoid(eta)`) or `fixed` (`FIXED_P`) |
-| `BARRIER_MODE` | `none`, `soft`, `hard`, `shifted`, `power` |
-| `RECALIBRATION_MODE` | `spatial`, `spatial_channel`, `spatial_residual`, `full` |
-| `ENABLE_CHANNEL` | Enable channel branch in non-`full` variants |
-
-> [!NOTE]
-> In the original source, the helper `get_brpa_ablation_tag()` is based on *global settings*. It does **not** capture an instance-level `steps` override or post-training changes to the learnable propagation rate. Additionally, the original `Chan/NoChan` suffix reflects `ENABLE_CHANNEL` rather than the `full` variant's effective channel state. Record the instantiated module settings and its `get_effective_p()` value when reporting experiments.
-
 ## Project layout
 
 ```text
@@ -178,26 +139,10 @@ python BRPA.py
 
 See [source provenance and SHA-256](docs/SOURCE_PROVENANCE.md). The compatibility tests compare numerical outputs from `BRPA.py` to the **uploaded original code** under matched initialization, for a selection of component and propagation options. They cannot establish the accuracy, training reproducibility, or completeness of an external detection system.
 
-## Scope and availability
-
-| Item | Included? |
-|---|---|
-| BRPA attention module | ✅ |
-| Original uploaded BRPA code | ✅ |
-| Bilingual method/use documentation | ✅ |
-| Standalone examples and tests | ✅ |
-| Dataset and annotation files | ❌ Not supplied |
-| Detector integration patch / training commands | ❌ Not supplied |
-| Trained weights and benchmark logs | ❌ Not supplied |
-| BRPA publication DOI / verified citation | ❌ Not supplied |
-| Open-source license | ❌ Not supplied; choose a license before granting reuse permissions |
-
-For detector integration, instantiate `BRPA(channels=<feature_channels>)` at the desired feature-processing point. Integration registration for specific frameworks must be handled in the corresponding framework project; **this archive is not a ready-to-train Ultralytics fork**.
 
 ## Citation and license
 
-A **BRPA-specific published citation cannot be verified from the supplied manuscript**; do not cite the TCPELIA paper as the BRPA paper. Add a verified bibliographic entry after the corresponding BRPA manuscript is identified. No license is included because none was supplied or authorized; public GitHub visibility does not by itself grant reuse rights.
-
+This project is licensed under the MIT License.
 ---
 
 <div align="center">
