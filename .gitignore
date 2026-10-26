@@ -1,0 +1,27 @@
+# Python cache and local virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Local checkpoints / training artifacts: not supplied in this release
+*.pt
+*.pth
+*.ckpt
+runs/
+weights/
+checkpoints/
+
+# IDE and OS metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Do not commit datasets from a local workspace by accident
+datasets/
+data/
