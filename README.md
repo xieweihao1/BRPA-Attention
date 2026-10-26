@@ -17,7 +17,7 @@
 ---
 
 > [!IMPORTANT]
-> **Source fidelity.** The provided Python file implements BRPA and ablation settings. The supplied LaTeX manuscript describes **TCPELIA**, a different module. Therefore, this repository **does not** attribute that manuscript's paper title, numerical results, or publication information to BRPA. The exact uploaded Python code is preserved at [`reference/BRPA_ablation_original.py`](reference/BRPA_ablation_original.py).
+> **Source fidelity.** The provided Python file implements BRPA and ablation settings. The supplied LaTeX manuscript describes **TCPELIA**, a different module. Therefore, this repository **does not** attribute that manuscript's paper title, numerical results, or publication information to BRPA. The exact uploaded Python code is preserved at [`BRPA.py`](BRPA.py).
 
 ## Overview
 
